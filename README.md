@@ -253,5 +253,5 @@ healthcare-appointment-no-show-analysis/
 ├── powerbi/
 │   └── healthcare_no_show_dashboard.pbix
 │
-└── images/
-    └── dashboard.png
+└── assets/
+    └── dashboard_preview.png
