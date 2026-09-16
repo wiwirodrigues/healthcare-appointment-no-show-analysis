@@ -211,7 +211,7 @@ It includes:
 - Risk tier breakdown
 - High-risk appointment filtering
 
-![Healthcare Appointment No-Show Dashboard](images/dashboard.png)
+![Dashboard Preview](assets/dashboard_preview.png)
 
 ---
 
