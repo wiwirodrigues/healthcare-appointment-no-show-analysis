@@ -197,19 +197,15 @@ However, this analysis shows an **association rather than causation**. The resul
 ## 📊 Power BI Dashboard
 
 The Power BI dashboard provides an interactive overview of appointment attendance patterns and risk segmentation.
-
 It includes:
-
-- Total appointments
-- Overall no-show rate
-- Average appointment lead time
-- No-show rate by day of the week
-- No-show rate by lead time
-- No-show rate by age group
-- SMS reminder analysis
-- Neighborhood ranking
-- Risk tier breakdown
-- High-risk appointment filtering
+* Total appointments
+* Overall no-show rate
+* Average appointment lead time
+* No-show rate by day of the week
+* No-show rate by lead time
+* Neighborhood ranking
+* Risk tier breakdown
+* High-risk appointment filtering
 
 ![Dashboard Preview](assets/dashboard_preview.png)
 
