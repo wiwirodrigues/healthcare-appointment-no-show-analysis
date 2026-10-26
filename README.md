@@ -1,246 +1,200 @@
 # Healthcare Appointment No-Show Analysis
 
-SQL and Power BI analysis of healthcare appointment no-shows, identifying patterns associated with missed appointments and segmenting appointments by risk level.
+SQL, Excel and Power BI analysis of 110,521 medical appointments, combining a structured business-problem approach with chi-square hypothesis testing to identify what is associated with missed appointments and which actions to test first.
 
----
+## 🔑 Key Findings
+
+- **1 in 5 appointments ends in a no-show (20.2%)**, not the 30% stated in the original case brief.
+- **Lead time is the dominant factor.** The no-show rate rises from **4.6%** for same-day appointments to **33.0%** for appointments booked 31+ days ahead (Cramér's V = 0.295). Appointments booked one day or more ahead account for **92% of all no-shows**.
+- **SMS reminders show a Simpson's paradox.** In the raw data, patients who received an SMS missed *more* (27.6% vs 16.7%), because SMS is only sent for appointments booked well in advance. Within the same lead-time group, SMS is associated with **3.1 to 7.3 p.p. fewer no-shows**.
+- **Past behavior repeats.** Patients with a prior no-show miss 26.9% of the time, against 18.8% for returning patients who never missed.
+- **Recommendation:** run a controlled pilot of **SMS with active confirmation** (confirm or cancel) for appointments booked 4+ days ahead, and refill cancelled slots through a waiting list.
+
+![Executive presentation](assets/01_cover.png)
 
 ## 📌 Project Overview
 
-Patient no-shows can create operational challenges for healthcare organizations, affecting appointment availability, resource utilization, and scheduling efficiency.
+Patient no-shows create idle capacity, longer waiting lists and rework for scheduling teams. This project follows a structured problem-solving method (**DEASA**: Define, Structure, Analyze, Solutions, Present):
 
-This project analyzes medical appointment data to identify patterns associated with missed appointments and understand which appointment and patient characteristics are linked to higher no-show rates.
-
-The analysis was performed using **MySQL for data cleaning and exploratory analysis** and **Power BI for data visualization and dashboard development**.
-
----
+1. **Define** the problem with the ACERT framework.
+2. **Structure** it as a MECE hypothesis tree.
+3. **Analyze** the data with MySQL, test each hypothesis with chi-square in Excel and build a Power BI dashboard.
+4. **Develop solutions** prioritized by evidence, impact and feasibility.
+5. **Present** the results in an executive deck (English and Portuguese) built on the pyramid principle.
 
 ## 🎯 Business Problem
 
-The main objective of this analysis is to understand patient no-show behavior and identify characteristics associated with a higher likelihood of missed appointments.
+**Central question:** how can we reduce no-shows to medical appointments?
 
-The analysis addresses the following questions:
+| ACERT | Definition |
+| --- | --- |
+| **Actors** | Unit management (decision maker): use the schedule efficiently · Scheduling team: fewer no-shows, late cancellations and rework · Doctors: fewer idle slots and better continuity of care · Patients: be able to attend and receive care |
+| **Success criteria** | Reduce the no-show rate from the 20.2% baseline (target to be validated with management) without increasing waiting times |
+| **Scope** | Appointment records of the health unit (April to June 2016) |
+| **Restrictions** | Data quality and availability, existing resources only, patient privacy (LGPD), and observational data that cannot prove causation |
+| **Time** | Not set; to be defined with management |
 
-- What is the overall no-show rate?
-- Does the day of the week affect no-show rates?
-- Does the time between scheduling and the appointment affect attendance?
-- Do no-show rates vary across age groups?
-- Are SMS reminders associated with different no-show rates?
-- Which neighborhoods have higher no-show rates?
-- Can previous patient behavior help identify higher-risk appointments?
+## 🌳 Hypothesis Tree
 
----
+The central question was broken down into four mutually exclusive and collectively exhaustive (MECE) branches:
+
+| Branch | Sub-hypotheses |
+| --- | --- |
+| **H1 Scheduling process** | H1.1 Longer lead time → more no-shows · H1.2 Rate varies by weekday · H1.3 A few lead-time groups concentrate most no-shows |
+| **H2 Communication** | H2.1 Raw SMS vs no SMS · H2.2 SMS effect within the same lead-time group |
+| **H3 Patient characteristics** | H3.1 Age and gender · H3.2 Bolsa Família (cash-transfer program) · H3.3 Hypertension, diabetes, alcoholism, disability · H3.4 Prior no-show history |
+| **H4 Geographic context** | H4.1 Neighborhoods above average · H4.2 Neighborhood gap after controlling for lead time |
+
+Branches were prioritized by impact on the decision, available evidence and ease of validation: H1 → H2 → H3 → H4. H3 was tested before H4 because H4.2 uses patient characteristics as controls.
 
 ## 📊 Dataset
 
-The dataset contains medical appointment records with information about patients, appointments, reminders, health conditions, and location.
-
-After data cleaning, the analysis included **110,519 appointments**.
-
-### Main Variables
+[Medical Appointment No-Shows](https://www.kaggle.com/datasets/joniarroba/noshowappointments) (Kaggle). After cleaning, the analysis included **110,521 appointments**.
 
 | Variable | Description |
-|---|---|
+| --- | --- |
 | PatientId | Patient identifier |
 | AppointmentID | Appointment identifier |
 | Gender | Patient gender |
 | Age | Patient age |
-| Neighbourhood | Location associated with the appointment |
-| Scholarship | Scholarship indicator |
-| Hypertension | Hypertension indicator |
-| Diabetes | Diabetes indicator |
-| Disability_count | Disability count |
+| Neighbourhood | Neighborhood where the patient lives |
+| Scholarship | Enrolled in Bolsa Família (Brazilian cash-transfer program) |
+| Hypertension, Diabetes, Alcoholism | Health condition indicators |
+| Disability_count | Number of disabilities (0 to 4) |
 | SMS_received | Whether an SMS reminder was received |
-| ScheduledDay | Date and time when the appointment was scheduled |
+| ScheduledDay | Date and time the appointment was booked |
 | AppointmentDay | Date of the appointment |
-| No_show | Whether the patient missed the appointment |
-| lead_time_days | Number of days between scheduling and the appointment |
+| No_show | Whether the patient missed the appointment ("Yes" = missed) |
+| lead_time_days | Days between booking and appointment |
 
----
+## 🧹 Data Cleaning (MySQL)
 
-## 🧹 Data Cleaning
+- Standardized column names and converted date fields
+- Removed invalid ages (−1) and negative lead times
+- Created `lead_time_days`, `lead_time_group`, `age_group` and `day_name`
+- Used window functions to count each patient's `Prior_appointments` and `Prior_no_shows` (only appointments **before** the current one, to avoid using future information)
+- Derived `no_show_history` (First visit / Returning, no prior no-show / Prior no-show) and `has_disability` (1 if Disability_count > 0) for the statistical tests
 
-Data preparation was performed using MySQL.
+## 📐 Statistical Testing
 
-The main cleaning steps included:
+### Why the chi-square test
 
-- Standardizing column names
-- Converting date fields into appropriate date formats
-- Removing invalid age values
-- Identifying and removing negative lead-time values
-- Creating the `lead_time_days` variable
-- Checking data distributions and inconsistencies
-- Creating derived variables for exploratory analysis
+Each hypothesis asks whether **no-show (Yes/No)** depends on a **categorical** variable (lead-time group, SMS, age group, neighborhood...). The chi-square test of independence is built for exactly this:
 
----
+- **The outcome is categorical.** No-show is a proportion, not an average, so t-tests do not apply.
+- **The predictors are categorical**, with two or more groups. One test covers all groups at once (e.g., 6 lead-time groups) instead of many pairwise comparisons.
+- **Its assumptions are met.** With 110,000 rows, expected counts are well above 5 in almost every cell. Small groups were excluded where they were not (Saturday, neighborhoods with < 200 appointments).
+- **It is transparent.** It compares observed counts with the counts expected if there were no relationship, and can be built step by step in Excel.
 
-## 🔎 Methodology
+### What the chi-square does *not* tell us, and how this was handled
 
-The analysis was conducted in several stages.
+| Limitation | How it was handled |
+| --- | --- |
+| With a large sample, almost any difference is "significant" | A hypothesis is confirmed only if **p < 0.05 *and* the rate difference ≥ 3 p.p.** (≥ 5 p.p. for lead time) |
+| It does not measure strength | **Cramér's V** reported as effect size (< 0.10 weak · 0.10–0.30 moderate · > 0.30 strong) |
+| It does not show direction | No-show rates compared group by group |
+| It compares two variables at a time and can be confounded | **Stratified tests**: SMS and neighborhood re-tested within each lead-time group (H2.2, H4.2) |
+| It assumes independent observations | Some patients have several appointments; p-values are slightly optimistic, so decisions rely on effect sizes |
+| It does not fit before/after measurements on the same patients | The pilot should use an **A/B design** (chi-square); a before/after on the same patients would need **McNemar's test** |
 
-### 1. Data Cleaning
+### Test used for each hypothesis
 
-The raw dataset was imported into MySQL and prepared for analysis by standardizing fields, converting dates, removing invalid records, and creating derived variables.
+| Hypothesis | Test | d.f. | Notes |
+| --- | --- | --- | --- |
+| H1.1 Lead time | Chi-square, 6 × 2 | 5 | |
+| H1.2 Weekday | Chi-square, 5 × 2 | 4 | Saturday excluded (39 appointments, unstable rate) |
+| H1.3 Concentration | No test: share of no-shows vs share of appointments | — | A distribution question, not an association question |
+| H2.1 Raw SMS | Chi-square, 2 × 2 | 1 | Confounded by lead time |
+| H2.2 SMS controlled | Chi-square 2 × 2 **within each** lead-time group | 1 per group | Same-day group has no SMS |
+| H3.1 Age · Gender | Chi-square, 5 × 2 · 2 × 2 | 4 · 1 | |
+| H3.2 Bolsa Família | Chi-square, 2 × 2 | 1 | |
+| H3.3 Health conditions | Chi-square, 2 × 2 for each condition | 1 | `has_disability` used instead of the 0–4 count (tiny groups) |
+| H3.4 History | Chi-square, 3 × 2 | 2 | 87% of the χ² comes from the "prior no-show" group |
+| H4.1 Neighborhoods | Chi-square, 69 × 2 | 68 | Only neighborhoods with ≥ 200 appointments |
+| H4.2 Neighborhood controlled | Rate comparison within each lead-time group | — | 6 high-rate neighborhoods vs all others |
 
-### 2. Exploratory Data Analysis
+## 📈 Results
 
-SQL queries were used to calculate no-show rates across different dimensions:
+| Hypothesis | Main finding | Difference | Cramér's V | Verdict |
+| --- | --- | --- | --- | --- |
+| H1.1 Lead time | 4.6% same day → 33.0% at 31+ days | 28.4 p.p. | 0.295 | ✅ Confirmed |
+| H1.2 Weekday | 19.3% (Thu) to 21.2% (Fri) | 1.9 p.p. | 0.016 | ❌ Rejected |
+| H1.3 Concentration | Top two groups = 42.9% of no-shows; 92% from appointments not booked same day | — | — | ❌ Rejected |
+| H2.1 Raw SMS | 27.6% with SMS vs 16.7% without | +10.9 p.p. | 0.127 | ⚠️ Confounded |
+| H2.2 SMS controlled | Lower rates with SMS in every group of 4+ days | −3.1 to −7.3 p.p. | 0.035–0.076 | ✅ Confirmed |
+| H3.1 Age | Teen 26.0% → Senior 15.3% | 10.7 p.p. | 0.079 | ✅ Confirmed |
+| H3.1 Gender | 20.3% vs 20.0% (p = 0.17) | 0.3 p.p. | 0.004 | ❌ Rejected |
+| H3.2 Bolsa Família | 23.7% vs 19.8% | 3.9 p.p. | 0.029 | ✅ Confirmed (weak) |
+| H3.3 Hypertension | 17.3% vs 20.9% | 3.6 p.p. | 0.036 | ✅ Confirmed (weak) |
+| H3.3 Diabetes · Alcoholism · Disability | Differences of 0.1 to 2.4 p.p. | < 3 p.p. | ≤ 0.015 | ❌ Rejected |
+| H3.4 No-show history | 26.9% with prior no-show vs 18.8% without | 8.0 p.p. | 0.064 | ✅ Confirmed |
+| H4.1 Neighborhoods | 6 of 69 neighborhoods ≥ 3 p.p. above average (9.9% of appointments) | up to 8.7 p.p. | 0.066 | ✅ Confirmed (limited impact) |
+| H4.2 Neighborhood × lead time | Gap persists in every lead-time group | +1.2 to +12.0 p.p. | — | ✅ Confirmed |
 
-- Day of the week
-- Appointment lead time
-- Age group
-- SMS reminders
-- Neighborhood
+![Lead time](assets/02_lead_time.png)
 
-### 3. Patient History Analysis
+![SMS](assets/03_sms_paradox.png)
 
-SQL window functions were used to analyze previous appointment behavior for each patient, including:
+![History and neighborhoods](assets/04_history_neighborhoods.png)
 
-- Number of prior appointments
-- Number of prior no-shows
+## 🧭 Risk Segmentation (SQL)
 
-This allowed historical attendance behavior to be incorporated into the analysis.
+A rule-based segmentation in `03_risk_analysis.sql` combines **lead time** and the patient's **prior no-show behavior** to flag appointments that may need extra follow-up. Appointments booked 8+ days ahead are always High Risk; shorter lead times move up a tier when the patient has missed previous appointments.
 
-### 4. Risk Segmentation
+| Risk tier | Appointments | Share of appointments | No-show rate | Share of all no-shows |
+| --- | --- | --- | --- | --- |
+| High Risk | 45,548 | 41.2% | 30.8% | 62.8% |
+| Medium Risk | 17,470 | 15.8% | 23.7% | 18.5% |
+| Low Risk | 47,503 | 43.0% | 8.7% | 18.6% |
+| **Total** | **110,521** | **100%** | **20.2%** | **100%** |
 
-A **rule-based risk segmentation** was created using appointment lead time and previous no-show behavior.
+**Reading:** the High Risk tier holds 41% of appointments but 63% of all no-shows, so focusing reminders and confirmations on it reaches most of the problem with less effort. Low Risk appointments miss only 8.7% of the time.
 
-Appointments were classified into:
-
-- New Patient – Monitor
-- Low Risk
-- Medium Risk
-- High Risk
-
-This is a rule-based segmentation and **not a predictive machine learning model**.
-
-### 5. Power BI Dashboard
-
-The results were visualized in Power BI through KPI cards, charts, neighborhood rankings, risk segmentation, and a high-risk appointment view.
-
----
-
-## 🔑 Key Findings
-
-### 1. Overall No-Show Rate
-
-The analysis included **110,519 appointments**, with an overall no-show rate of **20.19%**.
-
-This means that approximately one in five scheduled appointments resulted in a missed appointment.
-
----
-
-### 2. Longer Lead Times Are Associated with Higher No-Show Rates
-
-No-show rates increased as the time between scheduling and the appointment became longer.
-
-The highest no-show rate was observed among appointments scheduled **8 or more days in advance**, at approximately **32%**.
-
-This was considerably higher than same-day appointments, which had a no-show rate of approximately **3%**.
-
-This suggests that appointment lead time is an important factor associated with missed appointments.
-
----
-
-### 3. No-Show Rates Vary by Day of the Week
-
-No-show rates differed across appointment days.
-
-**Saturday had the highest no-show rate**, at approximately **23%**, while **Thursday had the lowest**, at approximately **19%**.
-
-This indicates that attendance patterns are not evenly distributed across the week.
-
----
-
-### 4. Differences Across Neighborhoods
-
-The analysis identified differences in no-show rates across neighborhoods.
-
-The dashboard presents the **15 neighborhoods with the highest no-show rates**, considering only neighborhoods with at least **100 appointments**.
-
-Among the neighborhoods displayed, **Santos Dumont** had the highest no-show rate, at approximately **29%**.
-
----
-
-### 5. Patient History Provides Additional Risk Information
-
-Previous appointment behavior was analyzed using SQL window functions.
-
-Patients with a history of missed appointments can be distinguished from patients without previous attendance history, providing an additional dimension for appointment risk segmentation.
-
----
-
-### 6. Risk Segmentation
-
-The rule-based segmentation resulted in the following distribution:
-
-| Risk Tier | Percentage |
-|---|---:|
-| New Patient – Monitor | 56.37% |
-| High Risk | 20.08% |
-| Low Risk | 15.53% |
-| Medium Risk | 8.02% |
-
-Approximately **20% of appointments were classified as High Risk** under the rules defined for this analysis.
-
-This segmentation can help prioritize appointments that may require additional attention or follow-up.
-
----
-
-### 7. SMS Reminders
-
-The analysis identified differences in no-show rates between appointments where patients received an SMS reminder and those where they did not.
-
-However, this analysis shows an **association rather than causation**. The results do not establish that receiving an SMS directly caused a change in attendance.
-
----
+This is a rule-based segmentation, not a predictive model, and it was not validated on new data. It was not used as a variable in the hypothesis tests, because it is built from the same variables being tested.
 
 ## 📊 Power BI Dashboard
 
-The Power BI dashboard provides an interactive overview of appointment attendance patterns and risk segmentation.
-It includes:
-* Total appointments
-* Overall no-show rate
-* Average appointment lead time
-* No-show rate by day of the week
-* No-show rate by lead time
-* Neighborhood ranking
-* Risk tier breakdown
-* High-risk appointment filtering
+- **KPI cards:** total appointments (110,521), no-show rate (20.2%) and median lead time (4 days)
+- **No-show rate by day of week**, with Saturday omitted (only 39 appointments)
+- **No-show rate by lead time:** same day 4.7%, 1–3 days 22.9%, 4–7 days 25.2%, 8+ days 32.1%
+- **Appointments and share of no-shows by risk tier**, with a risk-tier filter
+- **Top 15 neighborhoods** by no-show rate
+- **Appointment detail table** with lead time, prior appointments, prior no-shows, SMS and risk tier
 
-![Dashboard Preview](assets/dashboard_preview.png)
+![Dashboard preview](assets/dashboard_preview.png)
 
----
+## 💡 Recommendations and Action Plan
 
-## 💡 Conclusion & Recommendations
+| Initiative | Priority | Proposed decision |
+| --- | --- | --- |
+| SMS with active confirmation | 1 | Test through a controlled pilot |
+| Refill cancelled slots (waiting list) | 2 | Assess together with the cancellation process |
+| Targeted reminder for patients with prior no-shows | 3 | Test with a control group |
+| Neighborhood differences | Investigate | Understand access barriers before intervening, without penalizing residents |
 
-The analysis shows that patient no-shows are not evenly distributed across appointments.
+**Pilot (5W2H):** send an SMS 24–48 hours before appointments booked 4+ days ahead, asking the patient to confirm or cancel; offer cancelled slots to a waiting list; compare against a control group over 8 weeks. Success indicators: no-show rate (intervention vs control) and share of cancelled slots refilled.
 
-**Appointment lead time and previous patient behavior are particularly useful dimensions for identifying appointments associated with higher no-show risk.**
+Rough sizing: extending SMS to the ~40% of 4+ day appointments without one could avoid about 1,270 no-shows (≈ 5.7%), *if* the observed association were causal. That is why the pilot comes first.
 
-Based on the findings, healthcare organizations could consider:
+![Recommendation](assets/05_recommendation.png)
 
-- Prioritizing additional reminders for higher-risk appointments
-- Paying particular attention to appointments scheduled well in advance
-- Using previous attendance behavior when planning appointment follow-up
-- Monitoring no-show patterns across different days and locations
-- Using risk segmentation to prioritize follow-up efforts
+## ⚠️ Limitations
 
-A risk-based approach could help organizations allocate reminder and confirmation efforts more strategically.
-
----
+- Observational data: the results show association, not causation.
+- Only three months of 2016; no-show history is truncated at the start of the period.
+- No data on reason for missing, distance to the unit, specialty, or when and how SMS messages were sent.
 
 ## 🛠️ Tools
 
-- **MySQL** — Data cleaning, transformation and analysis
-- **SQL** — Exploratory analysis, window functions and risk segmentation
-- **Power BI** — Data visualization and dashboard development
-- **GitHub** — Project documentation and version control
-
----
+- **MySQL:** data cleaning, transformation, window functions and risk segmentation
+- **Excel:** pivot tables and chi-square tests
+- **Power BI:** dashboard
+- **PowerPoint:** problem structuring (ACERT, hypothesis tree, hypothesis matrix, action plan) and executive presentation
+- **GitHub:** documentation and version control
 
 ## 📁 Project Structure
 
-```text
+```
 healthcare-appointment-no-show-analysis/
 │
 ├── README.md
@@ -250,8 +204,17 @@ healthcare-appointment-no-show-analysis/
 │   ├── 02_exploratory_analysis.sql
 │   └── 03_risk_analysis.sql
 │
+├── excel/
+│   └── chi_square_tests.xlsx
+│
 ├── powerbi/
 │   └── healthcare_no_show_dashboard.pbix
 │
+├── presentation/
+│   ├── no_show_executive_presentation_EN.pptx
+│   └── no_show_executive_presentation_PT.pptx
+│
 └── assets/
-    └── dashboard_preview.png
+    ├── dashboard_preview.png
+    └── 01–05 presentation slides (.png)
+```
