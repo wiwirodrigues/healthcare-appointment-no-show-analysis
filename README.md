@@ -1,6 +1,7 @@
 # Healthcare Appointment No-Show Analysis
 
 SQL, Excel and Power BI analysis of 110,521 medical appointments, combining a structured business-problem approach with chi-square hypothesis testing to identify what is associated with missed appointments and which actions to test first.
+**[View the interactive Power BI dashboard](https://app.powerbi.com/view?r=eyJrIjoiNGRlYTU5ZTktZDUzMy00OTg0LThhNTktOTYzZmVjMzc5MTAyIiwidCI6Ijk1NDYxM2ZhLWUzN2UtNDZkNi04NGYxLTJmYjNmMzY3MjExMyJ9)**
 
 ## Key Findings
 
@@ -156,7 +157,9 @@ This is a rule-based segmentation, not a predictive model, and it was not valida
 - **Top 15 neighborhoods** by no-show rate
 - **Appointment detail table** with lead time, prior appointments, prior no-shows, SMS and risk tier
 
-![Dashboard preview](assets/dashboard_preview.png)
+[![Dashboard preview](assets/dashboard_preview.png)](https://app.powerbi.com/view?r=eyJrIjoiNGRlYTU5ZTktZDUzMy00OTg0LThhNTktOTYzZmVjMzc5MTAyIiwidCI6Ijk1NDYxM2ZhLWUzN2UtNDZkNi04NGYxLTJmYjNmMzY3MjExMyJ9)
+
+**[Open the interactive dashboard](https://app.powerbi.com/view?r=eyJrIjoiNGRlYTU5ZTktZDUzMy00OTg0LThhNTktOTYzZmVjMzc5MTAyIiwidCI6Ijk1NDYxM2ZhLWUzN2UtNDZkNi04NGYxLTJmYjNmMzY3MjExMyJ9)** (no login required)
 
 ## Recommendations and Action Plan
 
