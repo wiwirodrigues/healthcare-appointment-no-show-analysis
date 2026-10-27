@@ -38,12 +38,7 @@ Patient no-shows create idle capacity, longer waiting lists and rework for sched
 
 The central question was broken down into four mutually exclusive and collectively exhaustive (MECE) branches:
 
-| Branch | Sub-hypotheses |
-| --- | --- |
-| **H1 Scheduling process** | H1.1 Longer lead time → more no-shows · H1.2 Rate varies by weekday · H1.3 A few lead-time groups concentrate most no-shows |
-| **H2 Communication** | H2.1 Raw SMS vs no SMS · H2.2 SMS effect within the same lead-time group |
-| **H3 Patient characteristics** | H3.1 Age and gender · H3.2 Scholarship · H3.3 Hypertension, diabetes, alcoholism, disability · H3.4 Prior no-show history |
-| **H4 Geographic context** | H4.1 Neighborhoods above average · H4.2 Neighborhood gap after controlling for lead time |
+![Hypothesis Tree](assets/hypothesis_tree.png)
 
 Branches were prioritized by impact on the decision, available evidence and ease of validation: H1 → H2 → H3 → H4. H3 was tested before H4 because H4.2 uses patient characteristics as controls.
 
@@ -172,6 +167,8 @@ This is a rule-based segmentation, not a predictive model, and it was not valida
 | Targeted reminder for patients with prior no-shows | 3 | Test with a control group |
 | Neighborhood differences | Investigate | Understand access barriers before intervening, without penalizing residents |
 
+![Action Plan](assets/action_plan.png)
+
 **Pilot (5W2H):** send an SMS 24–48 hours before appointments booked 4+ days ahead, asking the patient to confirm or cancel; offer cancelled slots to a waiting list; compare against a control group over 8 weeks. Success indicators: no-show rate (intervention vs control) and share of cancelled slots refilled.
 
 Rough sizing: extending SMS to the ~40% of 4+ day appointments without one could avoid about 1,270 no-shows (≈ 5.7%), *if* the observed association were causal. That is why the pilot comes first.
@@ -212,7 +209,6 @@ healthcare-appointment-no-show-analysis/
 │
 ├── presentation/
 │   ├── no_show_executive_presentation_EN.pptx
-│   └── no_show_executive_presentation_PT.pptx
 │
 └── assets/
     ├── dashboard_preview.png
