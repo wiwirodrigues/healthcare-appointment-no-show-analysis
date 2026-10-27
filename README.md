@@ -2,7 +2,7 @@
 
 SQL, Excel and Power BI analysis of 110,521 medical appointments, combining a structured business-problem approach with chi-square hypothesis testing to identify what is associated with missed appointments and which actions to test first.
 
-## 🔑 Key Findings
+## Key Findings
 
 - **1 in 5 appointments ends in a no-show (20.2%)**, not the 30% stated in the original case brief.
 - **Lead time is the dominant factor.** The no-show rate rises from **4.6%** for same-day appointments to **33.0%** for appointments booked 31+ days ahead (Cramér's V = 0.295). Appointments booked one day or more ahead account for **92% of all no-shows**.
@@ -12,7 +12,7 @@ SQL, Excel and Power BI analysis of 110,521 medical appointments, combining a st
 
 ![Executive presentation](assets/01_cover.png)
 
-## 📌 Project Overview
+## Project Overview
 
 Patient no-shows create idle capacity, longer waiting lists and rework for scheduling teams. This project follows a structured problem-solving method (**DEASA**: Define, Structure, Analyze, Solutions, Present):
 
@@ -22,7 +22,7 @@ Patient no-shows create idle capacity, longer waiting lists and rework for sched
 4. **Develop solutions** prioritized by evidence, impact and feasibility.
 5. **Present** the results in an executive deck (English and Portuguese) built on the pyramid principle.
 
-## 🎯 Business Problem
+## Business Problem
 
 **Central question:** how can we reduce no-shows to medical appointments?
 
@@ -34,7 +34,7 @@ Patient no-shows create idle capacity, longer waiting lists and rework for sched
 | **Restrictions** | Data quality and availability, existing resources only, patient privacy (LGPD), and observational data that cannot prove causation |
 | **Time** | Not set; to be defined with management |
 
-## 🌳 Hypothesis Tree
+## Hypothesis Tree
 
 The central question was broken down into four mutually exclusive and collectively exhaustive (MECE) branches:
 
@@ -42,12 +42,12 @@ The central question was broken down into four mutually exclusive and collective
 | --- | --- |
 | **H1 Scheduling process** | H1.1 Longer lead time → more no-shows · H1.2 Rate varies by weekday · H1.3 A few lead-time groups concentrate most no-shows |
 | **H2 Communication** | H2.1 Raw SMS vs no SMS · H2.2 SMS effect within the same lead-time group |
-| **H3 Patient characteristics** | H3.1 Age and gender · H3.2 Bolsa Família (cash-transfer program) · H3.3 Hypertension, diabetes, alcoholism, disability · H3.4 Prior no-show history |
+| **H3 Patient characteristics** | H3.1 Age and gender · H3.2 Scholarship · H3.3 Hypertension, diabetes, alcoholism, disability · H3.4 Prior no-show history |
 | **H4 Geographic context** | H4.1 Neighborhoods above average · H4.2 Neighborhood gap after controlling for lead time |
 
 Branches were prioritized by impact on the decision, available evidence and ease of validation: H1 → H2 → H3 → H4. H3 was tested before H4 because H4.2 uses patient characteristics as controls.
 
-## 📊 Dataset
+## Dataset
 
 [Medical Appointment No-Shows](https://www.kaggle.com/datasets/joniarroba/noshowappointments) (Kaggle). After cleaning, the analysis included **110,521 appointments**.
 
@@ -58,7 +58,7 @@ Branches were prioritized by impact on the decision, available evidence and ease
 | Gender | Patient gender |
 | Age | Patient age |
 | Neighbourhood | Neighborhood where the patient lives |
-| Scholarship | Enrolled in Bolsa Família (Brazilian cash-transfer program) |
+| Scholarship | Whether the patient receives a government welfare benefit (low-income families) |
 | Hypertension, Diabetes, Alcoholism | Health condition indicators |
 | Disability_count | Number of disabilities (0 to 4) |
 | SMS_received | Whether an SMS reminder was received |
@@ -67,7 +67,7 @@ Branches were prioritized by impact on the decision, available evidence and ease
 | No_show | Whether the patient missed the appointment ("Yes" = missed) |
 | lead_time_days | Days between booking and appointment |
 
-## 🧹 Data Cleaning (MySQL)
+## Data Cleaning (MySQL)
 
 - Standardized column names and converted date fields
 - Removed invalid ages (−1) and negative lead times
@@ -75,7 +75,7 @@ Branches were prioritized by impact on the decision, available evidence and ease
 - Used window functions to count each patient's `Prior_appointments` and `Prior_no_shows` (only appointments **before** the current one, to avoid using future information)
 - Derived `no_show_history` (First visit / Returning, no prior no-show / Prior no-show) and `has_disability` (1 if Disability_count > 0) for the statistical tests
 
-## 📐 Statistical Testing
+## Statistical Testing
 
 ### Why the chi-square test
 
@@ -107,29 +107,29 @@ Each hypothesis asks whether **no-show (Yes/No)** depends on a **categorical** v
 | H2.1 Raw SMS | Chi-square, 2 × 2 | 1 | Confounded by lead time |
 | H2.2 SMS controlled | Chi-square 2 × 2 **within each** lead-time group | 1 per group | Same-day group has no SMS |
 | H3.1 Age · Gender | Chi-square, 5 × 2 · 2 × 2 | 4 · 1 | |
-| H3.2 Bolsa Família | Chi-square, 2 × 2 | 1 | |
+| H3.2 Scholarship | Chi-square, 2 × 2 | 1 | |
 | H3.3 Health conditions | Chi-square, 2 × 2 for each condition | 1 | `has_disability` used instead of the 0–4 count (tiny groups) |
 | H3.4 History | Chi-square, 3 × 2 | 2 | 87% of the χ² comes from the "prior no-show" group |
 | H4.1 Neighborhoods | Chi-square, 69 × 2 | 68 | Only neighborhoods with ≥ 200 appointments |
 | H4.2 Neighborhood controlled | Rate comparison within each lead-time group | — | 6 high-rate neighborhoods vs all others |
 
-## 📈 Results
+## Results
 
 | Hypothesis | Main finding | Difference | Cramér's V | Verdict |
 | --- | --- | --- | --- | --- |
-| H1.1 Lead time | 4.6% same day → 33.0% at 31+ days | 28.4 p.p. | 0.295 | ✅ Confirmed |
-| H1.2 Weekday | 19.3% (Thu) to 21.2% (Fri) | 1.9 p.p. | 0.016 | ❌ Rejected |
-| H1.3 Concentration | Top two groups = 42.9% of no-shows; 92% from appointments not booked same day | — | — | ❌ Rejected |
-| H2.1 Raw SMS | 27.6% with SMS vs 16.7% without | +10.9 p.p. | 0.127 | ⚠️ Confounded |
-| H2.2 SMS controlled | Lower rates with SMS in every group of 4+ days | −3.1 to −7.3 p.p. | 0.035–0.076 | ✅ Confirmed |
-| H3.1 Age | Teen 26.0% → Senior 15.3% | 10.7 p.p. | 0.079 | ✅ Confirmed |
-| H3.1 Gender | 20.3% vs 20.0% (p = 0.17) | 0.3 p.p. | 0.004 | ❌ Rejected |
-| H3.2 Bolsa Família | 23.7% vs 19.8% | 3.9 p.p. | 0.029 | ✅ Confirmed (weak) |
-| H3.3 Hypertension | 17.3% vs 20.9% | 3.6 p.p. | 0.036 | ✅ Confirmed (weak) |
-| H3.3 Diabetes · Alcoholism · Disability | Differences of 0.1 to 2.4 p.p. | < 3 p.p. | ≤ 0.015 | ❌ Rejected |
-| H3.4 No-show history | 26.9% with prior no-show vs 18.8% without | 8.0 p.p. | 0.064 | ✅ Confirmed |
-| H4.1 Neighborhoods | 6 of 69 neighborhoods ≥ 3 p.p. above average (9.9% of appointments) | up to 8.7 p.p. | 0.066 | ✅ Confirmed (limited impact) |
-| H4.2 Neighborhood × lead time | Gap persists in every lead-time group | +1.2 to +12.0 p.p. | — | ✅ Confirmed |
+| H1.1 Lead time | 4.6% same day → 33.0% at 31+ days | 28.4 p.p. | 0.295 | Confirmed |
+| H1.2 Weekday | 19.3% (Thu) to 21.2% (Fri) | 1.9 p.p. | 0.016 | Rejected |
+| H1.3 Concentration | Top two groups = 42.9% of no-shows; 92% from appointments not booked same day | — | — | Rejected |
+| H2.1 Raw SMS | 27.6% with SMS vs 16.7% without | +10.9 p.p. | 0.127 | Confounded |
+| H2.2 SMS controlled | Lower rates with SMS in every group of 4+ days | −3.1 to −7.3 p.p. | 0.035–0.076 | Confirmed |
+| H3.1 Age | Teen 26.0% → Senior 15.3% | 10.7 p.p. | 0.079 | Confirmed |
+| H3.1 Gender | 20.3% vs 20.0% (p = 0.17) | 0.3 p.p. | 0.004 | Rejected |
+| H3.2 Scholarship | 23.7% with vs 19.8% without | 3.9 p.p. | 0.029 | Confirmed (weak) |
+| H3.3 Hypertension | 17.3% vs 20.9% | 3.6 p.p. | 0.036 | Confirmed (weak) |
+| H3.3 Diabetes · Alcoholism · Disability | Differences of 0.1 to 2.4 p.p. | < 3 p.p. | ≤ 0.015 | Rejected |
+| H3.4 No-show history | 26.9% with prior no-show vs 18.8% without | 8.0 p.p. | 0.064 | Confirmed |
+| H4.1 Neighborhoods | 6 of 69 neighborhoods ≥ 3 p.p. above average (9.9% of appointments) | up to 8.7 p.p. | 0.066 | Confirmed (limited impact) |
+| H4.2 Neighborhood × lead time | Gap persists in every lead-time group | +1.2 to +12.0 p.p. | — | Confirmed |
 
 ![Lead time](assets/02_lead_time.png)
 
@@ -137,7 +137,7 @@ Each hypothesis asks whether **no-show (Yes/No)** depends on a **categorical** v
 
 ![History and neighborhoods](assets/04_history_neighborhoods.png)
 
-## 🧭 Risk Segmentation (SQL)
+## Risk Segmentation (SQL)
 
 A rule-based segmentation in `03_risk_analysis.sql` combines **lead time** and the patient's **prior no-show behavior** to flag appointments that may need extra follow-up. Appointments booked 8+ days ahead are always High Risk; shorter lead times move up a tier when the patient has missed previous appointments.
 
@@ -152,7 +152,7 @@ A rule-based segmentation in `03_risk_analysis.sql` combines **lead time** and t
 
 This is a rule-based segmentation, not a predictive model, and it was not validated on new data. It was not used as a variable in the hypothesis tests, because it is built from the same variables being tested.
 
-## 📊 Power BI Dashboard
+## Power BI Dashboard
 
 - **KPI cards:** total appointments (110,521), no-show rate (20.2%) and median lead time (4 days)
 - **No-show rate by day of week**, with Saturday omitted (only 39 appointments)
@@ -163,7 +163,7 @@ This is a rule-based segmentation, not a predictive model, and it was not valida
 
 ![Dashboard preview](assets/dashboard_preview.png)
 
-## 💡 Recommendations and Action Plan
+## Recommendations and Action Plan
 
 | Initiative | Priority | Proposed decision |
 | --- | --- | --- |
@@ -178,13 +178,13 @@ Rough sizing: extending SMS to the ~40% of 4+ day appointments without one could
 
 ![Recommendation](assets/05_recommendation.png)
 
-## ⚠️ Limitations
+## Limitations
 
 - Observational data: the results show association, not causation.
 - Only three months of 2016; no-show history is truncated at the start of the period.
 - No data on reason for missing, distance to the unit, specialty, or when and how SMS messages were sent.
 
-## 🛠️ Tools
+## Tools
 
 - **MySQL:** data cleaning, transformation, window functions and risk segmentation
 - **Excel:** pivot tables and chi-square tests
@@ -192,7 +192,7 @@ Rough sizing: extending SMS to the ~40% of 4+ day appointments without one could
 - **PowerPoint:** problem structuring (ACERT, hypothesis tree, hypothesis matrix, action plan) and executive presentation
 - **GitHub:** documentation and version control
 
-## 📁 Project Structure
+## Project Structure
 
 ```
 healthcare-appointment-no-show-analysis/
