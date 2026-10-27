@@ -213,4 +213,6 @@ healthcare-appointment-no-show-analysis/
 └── assets/
     ├── dashboard_preview.png
     └── 01–05 presentation slides (.png)
+    ├── hypothesis_tree.png
+    └── action_plan.png
 ```
