@@ -38,10 +38,6 @@ Patient no-shows create idle capacity, longer waiting lists and rework for sched
 
 ## Hypothesis Tree
 
-The central question was broken down into four mutually exclusive and collectively exhaustive (MECE) branches:
-
-![Hypothesis Tree](assets/hypothesis_tree.png)
-
 Branches were prioritized by impact on the decision, available evidence and ease of validation: H1 → H2 → H3 → H4. H3 was tested before H4 because H4.2 uses patient characteristics as controls.
 
 ## Dataset
