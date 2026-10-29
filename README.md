@@ -171,10 +171,6 @@ This is a rule-based segmentation, not a predictive model, and it was not valida
 | Targeted reminder for patients with prior no-shows | 3 | Test with a control group |
 | Neighborhood differences | Investigate | Understand access barriers before intervening, without penalizing residents |
 
-![Action Plan](assets/action_plan.png)
-
-**Pilot (5W2H):** send an SMS 24–48 hours before appointments booked 4+ days ahead, asking the patient to confirm or cancel; offer cancelled slots to a waiting list; compare against a control group over 8 weeks. Success indicators: no-show rate (intervention vs control) and share of cancelled slots refilled.
-
 Rough sizing: extending SMS to the ~40% of 4+ day appointments without one could avoid about 1,270 no-shows (≈ 5.7%), *if* the observed association were causal. That is why the pilot comes first.
 
 ![Recommendation](assets/05_recommendation.png)
