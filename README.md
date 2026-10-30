@@ -4,6 +4,7 @@ SQL, Excel and Power BI analysis of 110,521 medical appointments, combining a st
 
 **[View the interactive Power BI dashboard](https://app.powerbi.com/view?r=eyJrIjoiNGRlYTU5ZTktZDUzMy00OTg0LThhNTktOTYzZmVjMzc5MTAyIiwidCI6Ijk1NDYxM2ZhLWUzN2UtNDZkNi04NGYxLTJmYjNmMzY3MjExMyJ9)**
 
+
 ## Key Findings
 
 - **1 in 5 appointments ends in a no-show (20.2%)**, not the 30% stated in the original case brief.
@@ -154,7 +155,8 @@ This is a rule-based segmentation, not a predictive model, and it was not valida
 - **Top 15 neighborhoods** by no-show rate
 - **Appointment detail table** with lead time, prior appointments, prior no-shows, SMS and risk tier
 
-[![Dashboard preview](assets/dashboard_preview.png)](https://app.powerbi.com/view?r=eyJrIjoiNGRlYTU5ZTktZDUzMy00OTg0LThhNTktOTYzZmVjMzc5MTAyIiwidCI6Ijk1NDYxM2ZhLWUzN2UtNDZkNi04NGYxLTJmYjNmMzY3MjExMyJ9)
+<img width="1437" height="808" alt="image" src="https://github.com/user-attachments/assets/848ea75c-8143-4f95-8f81-96643894a75f" />
+
 
 **[Open the interactive dashboard](https://app.powerbi.com/view?r=eyJrIjoiNGRlYTU5ZTktZDUzMy00OTg0LThhNTktOTYzZmVjMzc5MTAyIiwidCI6Ijk1NDYxM2ZhLWUzN2UtNDZkNi04NGYxLTJmYjNmMzY3MjExMyJ9)** (no login required)
 
