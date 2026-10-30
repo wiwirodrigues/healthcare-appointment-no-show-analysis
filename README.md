@@ -169,7 +169,7 @@ This is a rule-based segmentation, not a predictive model, and it was not valida
 | Targeted reminder for patients with prior no-shows | 3 | Test with a control group |
 | Neighborhood differences | Investigate | Understand access barriers before intervening, without penalizing residents |
 
-Rough sizing: extending SMS to the ~40% of 4+ day appointments without one could avoid about 1,270 no-shows (≈ 5.7%), *if* the observed association were causal. That is why the pilot comes first.
+Rough sizing: extending SMS to the ~40% of 4+ day appointments without one could avoid about 1,270 no-shows (≈ 5.7% of all no-shows), if the observed association were causal. That is why the pilot comes first.
 
 ![Recommendation](assets/05_recommendation.png)
 
