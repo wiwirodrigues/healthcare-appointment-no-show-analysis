@@ -4,11 +4,10 @@ SQL, Excel and Power BI analysis of 110,521 medical appointments, combining a st
 
 **[View the interactive Power BI dashboard](https://app.powerbi.com/view?r=eyJrIjoiNGRlYTU5ZTktZDUzMy00OTg0LThhNTktOTYzZmVjMzc5MTAyIiwidCI6Ijk1NDYxM2ZhLWUzN2UtNDZkNi04NGYxLTJmYjNmMzY3MjExMyJ9)**
 
-
 ## Key Findings
 
 - **1 in 5 appointments ends in a no-show (20.2%)**, not the 30% cited in the Kaggle dataset description.
-- **Lead time is the dominant factor.** The no-show rate rises from **4.65%** for same-day appointments to **33.0%** for appointments booked 31+ days ahead (Cramér's V = 0.295). Appointments booked one day or more ahead account for **92% of all no-shows**.
+- **Lead time is the dominant factor.** The no-show rate rises from **4.6%** for same-day appointments to **33.0%** for appointments booked 31+ days ahead (Cramér's V = 0.295). Appointments booked one day or more ahead account for **92% of all no-shows**.
 - **SMS reminders show a Simpson's paradox.** In the raw data, patients who received an SMS missed *more* (27.6% vs 16.7%), because SMS is only sent for appointments booked well in advance. Within the same lead-time group, SMS is associated with **3.1 to 7.3 p.p. fewer no-shows**.
 - **Past behavior repeats.** Patients with a prior no-show miss 26.9% of the time, against 18.8% for returning patients who never missed.
 - **Recommendation:** run a controlled pilot of **SMS with active confirmation** (confirm or cancel) for appointments booked 4+ days ahead, and refill cancelled slots through a waiting list.
@@ -23,7 +22,7 @@ Patient no-shows create idle capacity, longer waiting lists and rework for sched
 2. **Structure** it as a MECE hypothesis tree.
 3. **Analyze** the data with MySQL, test each hypothesis with chi-square in Excel and build a Power BI dashboard.
 4. **Develop solutions** prioritized by evidence, impact and feasibility.
-5. **Present** the results in an executive deck English built on the pyramid principle.
+5. **Present** the results in an executive deck in English, built on the pyramid principle.
 
 ## Business Problem
 
@@ -33,13 +32,15 @@ Patient no-shows create idle capacity, longer waiting lists and rework for sched
 | --- | --- |
 | **Actors** | Unit management (decision maker): use the schedule efficiently · Scheduling team: fewer no-shows, late cancellations and rework · Doctors: fewer idle slots and better continuity of care · Patients: be able to attend and receive care |
 | **Success criteria** | Reduce the no-show rate from the 20.2% baseline (target to be validated with management) without increasing waiting times |
-| **Scope** | Appointment records of the health unit (April 29 to June 8, 2016 (about six weeks)) |
+| **Scope** | Appointment records of the health unit, April 29 to June 8, 2016 (about six weeks) |
 | **Restrictions** | Data quality and availability, existing resources only, patient privacy (LGPD), and observational data that cannot prove causation |
 | **Time** | Not set; to be defined with management |
 
 ## Hypothesis Tree
 
-Branches were prioritized by impact on the decision, available evidence and ease of validation: H1 → H2 → H3 → H4. H3 was tested before H4 because H4.2 uses patient characteristics as controls.
+Branches were prioritized by impact on the decision, available evidence and ease of validation: H1 → H2 → H3 → H4.
+
+![Hypothesis tree](assets/hypothesis_tree.png)
 
 ## Dataset
 
@@ -65,9 +66,8 @@ Branches were prioritized by impact on the decision, available evidence and ease
 
 - Standardized column names and converted date fields
 - Removed invalid ages (−1) and negative lead times
-- Created `lead_time_days`, `lead_time_group`, `age_group` and `day_name`
-- Used window functions to count each patient's `Prior_appointments` and `Prior_no_shows` (only appointments **before** the current one, to avoid using future information)
-- Derived `no_show_history` (First visit / Returning, no prior no-show / Prior no-show) and `has_disability` (1 if Disability_count > 0) for the statistical tests
+- Created `lead_time_days`, `lead_time_group` (6 groups, for the tests), `lead_band` (4 groups, for the dashboard), `age_group`, `day_name` and `has_disability` (1 if Disability_count > 0)
+- In `03_risk_analysis.sql`, used window functions to count each patient's `prior_appointments` and `prior_no_shows` (only appointments **before** the current one, to avoid using future information), then derived `no_show_history` (First visit / Returning, no prior no-show / Prior no-show) and `risk_tier`
 
 ## Statistical Testing
 
@@ -150,13 +150,12 @@ This is a rule-based segmentation, not a predictive model, and it was not valida
 
 - **KPI cards:** total appointments (110,521), no-show rate (20.2%) and median lead time (4 days)
 - **No-show rate by day of week**, with Saturday omitted (only 39 appointments)
-- **No-show rate by lead time:** same day 4.7%, 1–3 days 22.9%, 4–7 days 25.2%, 8+ days 32.1%
+- **No-show rate by lead time:** same day 4.6%, 1–3 days 22.9%, 4–7 days 25.2%, 8+ days 32.1%
 - **Appointments and share of no-shows by risk tier**, with a risk-tier filter
 - **Top 15 neighborhoods** by no-show rate
 - **Appointment detail table** with lead time, prior appointments, prior no-shows, SMS and risk tier
 
-<img width="1437" height="808" alt="image" src="https://github.com/user-attachments/assets/848ea75c-8143-4f95-8f81-96643894a75f" />
-
+[![Dashboard preview](assets/dashboard_preview.png)](https://app.powerbi.com/view?r=eyJrIjoiNGRlYTU5ZTktZDUzMy00OTg0LThhNTktOTYzZmVjMzc5MTAyIiwidCI6Ijk1NDYxM2ZhLWUzN2UtNDZkNi04NGYxLTJmYjNmMzY3MjExMyJ9)
 
 **[Open the interactive dashboard](https://app.powerbi.com/view?r=eyJrIjoiNGRlYTU5ZTktZDUzMy00OTg0LThhNTktOTYzZmVjMzc5MTAyIiwidCI6Ijk1NDYxM2ZhLWUzN2UtNDZkNi04NGYxLTJmYjNmMzY3MjExMyJ9)** (no login required)
 
@@ -169,9 +168,11 @@ This is a rule-based segmentation, not a predictive model, and it was not valida
 | Targeted reminder for patients with prior no-shows | 3 | Test with a control group |
 | Neighborhood differences | Investigate | Understand access barriers before intervening, without penalizing residents |
 
-Rough sizing: extending SMS to the ~40% of 4+ day appointments without one could avoid about 1,270 no-shows (≈ 5.7% of all no-shows), if the observed association were causal. That is why the pilot comes first.
+Rough sizing: extending SMS to the ~40% of 4+ day appointments without one could avoid about 1,270 no-shows (≈ 5.7% of all no-shows), *if* the observed association were causal. That is why the pilot comes first.
 
 ![Recommendation](assets/05_recommendation.png)
+
+![Action plan](assets/action_plan.png)
 
 ## Limitations
 
@@ -204,9 +205,6 @@ healthcare-appointment-no-show-analysis/
 │
 ├── powerbi/
 │   └── healthcare_no_show_dashboard.pbix
-│
-├── presentation/
-│   ├── no_show_executive_presentation_EN.pptx
 │
 └── assets/
     ├── 01–05 presentation slides (.png)
