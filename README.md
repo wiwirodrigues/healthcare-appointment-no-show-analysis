@@ -8,7 +8,7 @@ SQL, Excel and Power BI analysis of 110,521 medical appointments, combining a st
 ## Key Findings
 
 - **1 in 5 appointments ends in a no-show (20.2%)**, not the 30% stated in the original case brief.
-- **Lead time is the dominant factor.** The no-show rate rises from **4.6%** for same-day appointments to **33.0%** for appointments booked 31+ days ahead (Cramér's V = 0.295). Appointments booked one day or more ahead account for **92% of all no-shows**.
+- **Lead time is the dominant factor.** The no-show rate rises from **4.65%** for same-day appointments to **33.0%** for appointments booked 31+ days ahead (Cramér's V = 0.295). Appointments booked one day or more ahead account for **92% of all no-shows**.
 - **SMS reminders show a Simpson's paradox.** In the raw data, patients who received an SMS missed *more* (27.6% vs 16.7%), because SMS is only sent for appointments booked well in advance. Within the same lead-time group, SMS is associated with **3.1 to 7.3 p.p. fewer no-shows**.
 - **Past behavior repeats.** Patients with a prior no-show miss 26.9% of the time, against 18.8% for returning patients who never missed.
 - **Recommendation:** run a controlled pilot of **SMS with active confirmation** (confirm or cancel) for appointments booked 4+ days ahead, and refill cancelled slots through a waiting list.
@@ -23,7 +23,7 @@ Patient no-shows create idle capacity, longer waiting lists and rework for sched
 2. **Structure** it as a MECE hypothesis tree.
 3. **Analyze** the data with MySQL, test each hypothesis with chi-square in Excel and build a Power BI dashboard.
 4. **Develop solutions** prioritized by evidence, impact and feasibility.
-5. **Present** the results in an executive deck (English and Portuguese) built on the pyramid principle.
+5. **Present** the results in an executive deck English built on the pyramid principle.
 
 ## Business Problem
 
@@ -33,7 +33,7 @@ Patient no-shows create idle capacity, longer waiting lists and rework for sched
 | --- | --- |
 | **Actors** | Unit management (decision maker): use the schedule efficiently · Scheduling team: fewer no-shows, late cancellations and rework · Doctors: fewer idle slots and better continuity of care · Patients: be able to attend and receive care |
 | **Success criteria** | Reduce the no-show rate from the 20.2% baseline (target to be validated with management) without increasing waiting times |
-| **Scope** | Appointment records of the health unit (April to June 2016) |
+| **Scope** | Appointment records of the health unit (April 29 to June 8, 2016 (about six weeks)) |
 | **Restrictions** | Data quality and availability, existing resources only, patient privacy (LGPD), and observational data that cannot prove causation |
 | **Time** | Not set; to be defined with management |
 
@@ -176,7 +176,7 @@ Rough sizing: extending SMS to the ~40% of 4+ day appointments without one could
 ## Limitations
 
 - Observational data: the results show association, not causation.
-- Only three months of 2016; no-show history is truncated at the start of the period.
+- Only April 29 to June 8, 2016 (about six weeks); no-show history is truncated at the start of the period.
 - No data on reason for missing, distance to the unit, specialty, or when and how SMS messages were sent.
 
 ## Tools
