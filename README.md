@@ -36,12 +36,6 @@ Patient no-shows create idle capacity, longer waiting lists and rework for sched
 | **Restrictions** | Data quality and availability, existing resources only, patient privacy (LGPD), and observational data that cannot prove causation |
 | **Time** | Not set; to be defined with management |
 
-## Hypothesis Tree
-
-Branches were prioritized by impact on the decision, available evidence and ease of validation: H1 → H2 → H3 → H4.
-
-![Hypothesis tree](assets/hypothesis_tree.png)
-
 ## Dataset
 
 [Medical Appointment No-Shows](https://www.kaggle.com/datasets/joniarroba/noshowappointments) (Kaggle). After cleaning, the analysis included **110,521 appointments**.
@@ -172,8 +166,6 @@ Rough sizing: extending SMS to the ~40% of 4+ day appointments without one could
 
 ![Recommendation](assets/05_recommendation.png)
 
-![Action plan](assets/action_plan.png)
-
 ## Limitations
 
 - Observational data: the results show association, not causation.
@@ -208,6 +200,4 @@ healthcare-appointment-no-show-analysis/
 │
 └── assets/
     ├── 01–05 presentation slides (.png)
-    ├── dashboard_preview.png
-    ├── hypothesis_tree.png
-    └── action_plan.png
+    └── dashboard_preview.png
