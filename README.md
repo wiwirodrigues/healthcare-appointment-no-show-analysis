@@ -7,7 +7,7 @@ SQL, Excel and Power BI analysis of 110,521 medical appointments, combining a st
 
 ## Key Findings
 
-- **1 in 5 appointments ends in a no-show (20.2%)**, not the 30% stated in the original case brief.
+- **1 in 5 appointments ends in a no-show (20.2%)**, not the 30% cited in the Kaggle dataset description.
 - **Lead time is the dominant factor.** The no-show rate rises from **4.65%** for same-day appointments to **33.0%** for appointments booked 31+ days ahead (Cramér's V = 0.295). Appointments booked one day or more ahead account for **92% of all no-shows**.
 - **SMS reminders show a Simpson's paradox.** In the raw data, patients who received an SMS missed *more* (27.6% vs 16.7%), because SMS is only sent for appointments booked well in advance. Within the same lead-time group, SMS is associated with **3.1 to 7.3 p.p. fewer no-shows**.
 - **Past behavior repeats.** Patients with a prior no-show miss 26.9% of the time, against 18.8% for returning patients who never missed.
@@ -113,7 +113,7 @@ Each hypothesis asks whether **no-show (Yes/No)** depends on a **categorical** v
 | --- | --- | --- | --- | --- |
 | H1.1 Lead time | 4.6% same day → 33.0% at 31+ days | 28.4 p.p. | 0.295 | Confirmed |
 | H1.2 Weekday | 19.3% (Thu) to 21.2% (Fri) | 1.9 p.p. | 0.016 | Rejected |
-| H1.3 Concentration | Top two groups = 42.9% of no-shows; 92% from appointments not booked same day | — | — | Rejected |
+| H1.3 Concentration | Top two lead-time groups hold only 42.9% of no-shows; they are spread across all groups booked 1+ day ahead | — | — | Rejected (not concentrated) |
 | H2.1 Raw SMS | 27.6% with SMS vs 16.7% without | +10.9 p.p. | 0.127 | Confounded |
 | H2.2 SMS controlled | Lower rates with SMS in every group of 4+ days | −3.1 to −7.3 p.p. | 0.035–0.076 | Confirmed |
 | H3.1 Age | Teen 26.0% → Senior 15.3% | 10.7 p.p. | 0.079 | Confirmed |
