@@ -19,7 +19,7 @@ SQL, Excel and Power BI analysis of 110,521 medical appointments, combining a st
 Patient no-shows create idle capacity, longer waiting lists and rework for scheduling teams. This project follows a structured problem-solving method (**DEASA**: Define, Structure, Analyze, Solutions, Present):
 
 1. **Define** the problem with the ACERT framework.
-2. **Structure** it as a MECE hypothesis tree.
+2. **Structure** it into hypotheses (H1–H4): scheduling, communication, patient characteristics and location.
 3. **Analyze** the data with MySQL, test each hypothesis with chi-square in Excel and build a Power BI dashboard.
 4. **Develop solutions** prioritized by evidence, impact and feasibility.
 5. **Present** the results in an executive deck in English, built on the pyramid principle.
@@ -177,7 +177,7 @@ Rough sizing: extending SMS to the ~40% of 4+ day appointments without one could
 - **MySQL:** data cleaning, transformation, window functions and risk segmentation
 - **Excel:** pivot tables and chi-square tests
 - **Power BI:** dashboard
-- **PowerPoint:** problem structuring (ACERT, hypothesis tree, hypothesis matrix, action plan) and executive presentation
+- **PowerPoint:** problem structuring (ACERT) and executive presentation
 - **GitHub:** documentation and version control
 
 ## Project Structure
