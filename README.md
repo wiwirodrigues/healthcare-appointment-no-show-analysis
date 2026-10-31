@@ -29,14 +29,6 @@ Patient no-shows create idle capacity, longer waiting lists and rework for sched
 
 **Central question:** how can we reduce no-shows to medical appointments?
 
-| ACERT | Definition |
-| --- | --- |
-| **Actors** | Unit management (decision maker): use the schedule efficiently · Scheduling team: fewer no-shows, late cancellations and rework · Doctors: fewer idle slots and better continuity of care · Patients: be able to attend and receive care |
-| **Success criteria** | Reduce the no-show rate from the 20.2% baseline (target to be validated with management) without increasing waiting times |
-| **Scope** | Appointment records of the health unit, April 29 to June 8, 2016 (about six weeks) |
-| **Restrictions** | Data quality and availability, existing resources only, patient privacy (LGPD), and observational data that cannot prove causation |
-| **Time** | Not set; to be defined with management |
-
 ## Dataset
 
 [Medical Appointment No-Shows](https://www.kaggle.com/datasets/joniarroba/noshowappointments) (Kaggle). After cleaning, the analysis included **110,521 appointments**.
