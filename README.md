@@ -17,9 +17,9 @@ SQL, Excel and Power BI analysis of 110,521 medical appointments, combining a st
 
 ## Project Overview
 
-Patient no-shows create idle capacity, longer waiting lists and rework for scheduling teams. This project follows a structured problem-solving method (**DEASA**: Define, Structure, Analyze, Solutions, Present):
+Patient no-shows create Unutilized capacity, longer waiting lists and rework for scheduling teams. This project follows a structured problem-solving method (**DEASA**: Define, Structure, Analyze, Solutions, Present):
 
-1. **Define** the problem with the ACERT framework.
+1. **Define** the problem with the ACERT framework to clearly map out the problem boundaries before diving into the data (Actors, Criteria for Success, Scope - Escopo in portuguese, Restrictions and Time)
 2. **Structure** it into hypotheses (H1–H4): scheduling, communication, patient characteristics and location.
 3. **Analyze** the data with MySQL, test each hypothesis with chi-square in Excel and build a Power BI dashboard.
 4. **Develop solutions** prioritized by evidence, impact and feasibility.
@@ -27,7 +27,7 @@ Patient no-shows create idle capacity, longer waiting lists and rework for sched
 
 ## Business Problem
 
-**Central question:** how can we reduce no-shows to medical appointments?
+**Central question:** : What sets apart the appointments patients attend from the ones they miss?
 
 ## Dataset
 
