@@ -130,7 +130,7 @@ Rough sizing: extending SMS to the ~40% of 4+ day appointments without one could
 - **MySQL:** data cleaning, transformation, window functions and risk segmentation
 - **Excel:** pivot tables and chi-square tests
 - **Power BI:** dashboard
-- **PowerPoint:** problem structuring (ACERT) and executive presentation
+- **PowerPoint:** executive presentation
 - **GitHub:** documentation and version control
 
 ## Project Structure
