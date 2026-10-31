@@ -4,6 +4,7 @@ SQL, Excel and Power BI analysis of 110,521 medical appointments, combining a st
 
 **[View the interactive Power BI dashboard](https://app.powerbi.com/view?r=eyJrIjoiNGRlYTU5ZTktZDUzMy00OTg0LThhNTktOTYzZmVjMzc5MTAyIiwidCI6Ijk1NDYxM2ZhLWUzN2UtNDZkNi04NGYxLTJmYjNmMzY3MjExMyJ9)**
 
+
 ## Key Findings
 
 - **1 in 5 appointments ends in a no-show (20.2%)**, not the 30% cited in the Kaggle dataset description.
