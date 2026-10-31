@@ -2,7 +2,7 @@
 
 SQL, Excel and Power BI analysis of 110,521 medical appointments, combining a structured business-problem approach with chi-square hypothesis testing to identify what is associated with missed appointments and which actions to test first.
 
-**[View the interactive Power BI dashboard](https://app.powerbi.com/view?r=eyJrIjoiNGRlYTU5ZTktZDUzMy00OTg0LThhNTktOTYzZmVjMzc5MTAyIiwidCI6Ijk1NDYxM2ZhLWUzN2UtNDZkNi04NGYxLTJmYjNmMzY3MjExMyJ9)** · **[View the executive presentation (PDF)](presentation/no_show_executive_presentation_EN.pdf)**
+**[View the interactive Power BI dashboard](https://app.powerbi.com/view?r=eyJrIjoiNGRlYTU5ZTktZDUzMy00OTg0LThhNTktOTYzZmVjMzc5MTAyIiwidCI6Ijk1NDYxM2ZhLWUzN2UtNDZkNi04NGYxLTJmYjNmMzY3MjExMyJ9)** · **[View the executive presentation (PDF)](executive%20presentation/no_show_executive_presentation_EN.pdf)**
 
 
 ## Key Findings
@@ -56,6 +56,21 @@ Patient no-shows create idle capacity, longer waiting lists and rework for sched
 - Created `lead_time_days`, `lead_time_group` (6 groups, for the tests), `lead_band` (4 groups, for the dashboard), `age_group`, `day_name` and `has_disability` (1 if Disability_count > 0)
 - In `03_risk_analysis.sql`, used window functions to count each patient's `prior_appointments` and `prior_no_shows` (only appointments **before** the current one, to avoid using future information), then derived `no_show_history` (First visit / Returning, no prior no-show / Prior no-show) and `risk_tier`
 
+## Hypothesis Tests (summary)
+
+Chi-square tests in Excel (`excel/chi_square_tests.xlsx`). A hypothesis was confirmed only with p < 0.05 **and** a difference of at least 3 p.p.; Cramér's V shows effect size.
+
+| Hypothesis | Result | Cramér's V | Verdict |
+| --- | --- | --- | --- |
+| H1 Lead time | 4.6% same day → 33.0% at 31+ days | 0.295 | Confirmed |
+| H1 Weekday | 19.3% to 21.2% | 0.016 | Rejected |
+| H2 SMS, within lead-time groups | −3.1 to −7.3 p.p. with SMS | 0.035–0.076 | Confirmed |
+| H3 Age | Teens 26.0% → seniors 15.3% | 0.079 | Confirmed |
+| H3 No-show history | 26.9% vs 18.8% | 0.064 | Confirmed |
+| H3 Scholarship, hypertension | 3.6 to 3.9 p.p. | ≤ 0.036 | Confirmed (weak) |
+| H3 Gender, diabetes, alcoholism, disability | < 3 p.p. | ≤ 0.015 | Rejected |
+| H4 Neighborhood | Gap persists within lead-time groups | 0.066 | Confirmed (limited impact) |
+
 ![Lead time](assets/02_lead_time.png)
 
 ![SMS](assets/03_sms_paradox.png)
@@ -107,6 +122,7 @@ Rough sizing: extending SMS to the ~40% of 4+ day appointments without one could
 
 - Observational data: the results show association, not causation.
 - Only April 29 to June 8, 2016 (about six weeks); no-show history is truncated at the start of the period.
+- Prior no-shows are counted by appointment date, so some may not yet have happened when the current appointment was booked; to apply the risk rule in practice, history should be counted only up to the booking date.
 - No data on reason for missing, distance to the unit, specialty, or when and how SMS messages were sent.
 
 ## Tools
@@ -135,7 +151,7 @@ healthcare-appointment-no-show-analysis/
 ├── powerbi/
 │   └── healthcare_no_show_dashboard.pbix
 │
-├── presentation/
+├── executive presentation/
 │   ├── no_show_executive_presentation_EN.pdf
 │   └── no_show_executive_presentation_EN.pptx
 │
