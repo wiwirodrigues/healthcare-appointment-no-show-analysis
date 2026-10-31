@@ -2,7 +2,7 @@
 
 SQL, Excel and Power BI analysis of 110,521 medical appointments, combining a structured business-problem approach with chi-square hypothesis testing to identify what is associated with missed appointments and which actions to test first.
 
-**[View the interactive Power BI dashboard](https://app.powerbi.com/view?r=eyJrIjoiNGRlYTU5ZTktZDUzMy00OTg0LThhNTktOTYzZmVjMzc5MTAyIiwidCI6Ijk1NDYxM2ZhLWUzN2UtNDZkNi04NGYxLTJmYjNmMzY3MjExMyJ9)**
+**[View the interactive Power BI dashboard](https://app.powerbi.com/view?r=eyJrIjoiNGRlYTU5ZTktZDUzMy00OTg0LThhNTktOTYzZmVjMzc5MTAyIiwidCI6Ijk1NDYxM2ZhLWUzN2UtNDZkNi04NGYxLTJmYjNmMzY3MjExMyJ9)** · **[View the executive presentation (PDF)](presentation/no_show_executive_presentation_EN.pdf)**
 
 
 ## Key Findings
@@ -198,6 +198,10 @@ healthcare-appointment-no-show-analysis/
 │
 ├── powerbi/
 │   └── healthcare_no_show_dashboard.pbix
+│
+├── presentation/
+│   ├── no_show_executive_presentation_EN.pdf
+│   └── no_show_executive_presentation_EN.pptx
 │
 └── assets/
     ├── 01–05 presentation slides (.png)
